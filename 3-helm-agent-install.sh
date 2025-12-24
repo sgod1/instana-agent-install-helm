@@ -23,8 +23,6 @@ source $_chart_dir/agent.env
 source agent-images.env
 source validate-agent-env.sh
 
-source login-registry.sh
-
 # 3-helm-agent-install.sh [chart.tgz [install|upgrade]]
 
 input_chart=$1
