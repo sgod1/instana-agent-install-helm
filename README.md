@@ -46,7 +46,7 @@ Install:
 ```
 1-helm-agent-download.sh
 2-helm-agent-copy-images.sh
-3-helm-agent-install.sh
+3-helm-agent-install.sh [_charts/instana-agent-${version}.tgz]
 ```
 
 New version upgrade:
