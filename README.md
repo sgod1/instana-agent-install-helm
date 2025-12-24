@@ -42,7 +42,7 @@ export AGENT_ZONE_NAME=""
 export REGISTRY_AUTH_FILE=_charts/auth.json
 ```
 
-Run:
+Install:
 ```
 1-helm-agent-download.sh
 2-helm-agent-copy-images.sh
