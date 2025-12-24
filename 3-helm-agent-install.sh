@@ -48,7 +48,7 @@ if [[ ! -f $chart ]]; then
    exit 1
 fi
 
-echo installing instana agent chart $chart
+echo ${helm_action}ing instana agent chart $chart
 
 oc new-project instana-agent
 oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent
