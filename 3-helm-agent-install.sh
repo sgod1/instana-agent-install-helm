@@ -25,12 +25,20 @@ source validate-agent-env.sh
 
 source login-registry.sh
 
+# 3-helm-agent-install.sh [chart.tgz [install|upgrade]]
+
 input_chart=$1
+helm_action=${2:-"install"}
+
+if [[ (! $helm_action == install) && (! $helm_action == upgrade) ]]; then
+   echo invalid helm action $helm_action, actions: install, upgrade
+   exit 1
+fi
 
 echo ... prereqs ...
 echo oc command is on the path
-echo logged into target openshift as cluster admin
 echo helm command is on the path
+echo logged into target openshift as cluster admin
 echo ...
 
 validate_agent_env
@@ -100,7 +108,7 @@ EOF
 # agent configuration for the helm chart
 agent_conf_yaml="helm-agent-config.yaml"
 
-echo installing agent chart $chart with values $values_yaml, $agent_conf_yaml
+echo ${helm_action}ing agent chart $chart with values $values_yaml, $agent_conf_yaml
 
 set -x
-helm install -f $values_yaml -f $agent_conf_yaml instana-agent -n instana-agent $chart --wait --timeout 60m0s
+helm $helm_action -f $values_yaml -f $agent_conf_yaml instana-agent -n instana-agent $chart --wait --timeout 60m0s
