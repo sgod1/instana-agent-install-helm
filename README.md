@@ -1,6 +1,9 @@
 # instana-agent-install-helm
 air gapped instana agent helm chart intstall
 
+Install skopeo, helm, oc and add to the path.
+Login into the target openshift cluster as cluster admin.
+
 ```
 ./0-copy-agent-env.sh 
 writing _charts/agent.env
