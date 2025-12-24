@@ -10,7 +10,7 @@ Run:
 writing _charts/agent.env
 ```
 
-Update values in _charts/agent.env
+Update values in `_charts/agent.env`
 ```
 export DOWNLOAD_KEY=""
 export AGENT_KEY=""
