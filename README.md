@@ -46,6 +46,7 @@ Install:
 ```
 1-helm-agent-download.sh
 2-helm-agent-copy-images.sh
+
 export version="agent chart version"
 3-helm-agent-install.sh [_charts/instana-agent-${version}.tgz]
 ```
@@ -54,12 +55,13 @@ New version upgrade:
 ```
 1-helm-agent-download.sh
 2-helm-agent-copy-images.sh
+
 export version="agent chart version"
 3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
 ```
 
 Values only (`helm-agent-config.yaml`) update:
 ```
-export version="agent chart verrsion"
+export version="agent chart version"
 3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
 ```
