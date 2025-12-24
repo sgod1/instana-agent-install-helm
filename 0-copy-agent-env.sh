@@ -43,7 +43,7 @@ export AGENT_ARCH=""
 export AGENT_CLUSTER_NAME=""
 export AGENT_ZONE_NAME=""
 
-# share skopeo/helm creds
+# skopeo creds
 export REGISTRY_AUTH_FILE=_charts/auth.json
 EOF
 
