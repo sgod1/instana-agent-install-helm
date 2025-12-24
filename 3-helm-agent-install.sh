@@ -21,6 +21,7 @@ _chart_dir="_charts"
 
 source $_chart_dir/agent.env
 source agent-images.env
+source validate-agent-env.sh
 
 source login-registry.sh
 
@@ -32,12 +33,7 @@ echo logged into target openshift as cluster admin
 echo helm command is on the path
 echo ...
 
-validate-agent-env.sh
-rc=$?
-if (( $rc > 0 )); then
-   echo exit on script error $rc
-   exit 1
-fi
+validate_agent_env
 
 chart=${input_chart:-$(find_agent_chart $_chart_dir)}
 
