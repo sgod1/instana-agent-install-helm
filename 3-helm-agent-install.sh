@@ -16,6 +16,15 @@ function find_agent_chart() {
    echo `find . -name "instana-agent*tgz"`
 }
 
+function validate_helm_action() {
+   local action=$1
+
+   if [[ (! $action == install) && (! $action == upgrade) ]]; then
+      echo invalid helm action $action, actions: install, upgrade
+      exit 1
+   fi
+}
+
 # main
 _chart_dir="_charts"
 
@@ -28,10 +37,7 @@ source validate-agent-env.sh
 input_chart=$1
 helm_action=${2:-"install"}
 
-if [[ (! $helm_action == install) && (! $helm_action == upgrade) ]]; then
-   echo invalid helm action $helm_action, actions: install, upgrade
-   exit 1
-fi
+validate_helm_action $helm_action
 
 echo ... prereqs ...
 echo oc command is on the path
