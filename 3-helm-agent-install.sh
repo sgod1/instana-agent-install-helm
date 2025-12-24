@@ -97,14 +97,7 @@ controllerManager:
     - name: $PRIVATE_REGISTRY_PULL_SECRET
 EOF
 
-# log into private container registry host
-if [[ ! -f $REGISTRY_AUTH_FILE ]]; then
-   login_registry "$PRIVATE_REGISTRY_USER" "$PRIVATE_REGISTRY_PASSWORD" "$PRIVATE_REGISTRY_HOST"
-else
-   echo registy auth file exists... $REGISTRY_AUTH_FILE
-fi
-
-# agent configuration for helm chart
+# agent configuration for the helm chart
 agent_conf_yaml="helm-agent-config.yaml"
 
 echo installing agent chart $chart with values $values_yaml, $agent_conf_yaml
