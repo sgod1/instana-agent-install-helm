@@ -48,3 +48,15 @@ Run:
 2-helm-agent-copy-images.sh
 3-helm-agent-install.sh
 ```
+
+New version upgrade:
+```
+1-helm-agent-download.sh
+2-helm-agent-copy-images.sh
+3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
+```
+
+Values only (`helm-agent-config.yaml`) update:
+```
+3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
+```
