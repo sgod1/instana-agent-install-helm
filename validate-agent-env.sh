@@ -38,7 +38,7 @@ function validate_agent_env() {
    if [[ -z $AGENT_ZONE_NAME ]]; then echo AGENT_ZONE_NAME required; err="failed"; fi
 
    if [[ $err == "failed" ]]; then
-      echo $agent_env validation falied
+      echo $agent_env validation failed
       exit 1
    fi
 }
