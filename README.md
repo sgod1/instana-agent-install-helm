@@ -6,7 +6,7 @@ Login into target openshift cluster as cluster admin.<br/>
 
 Copy agent environment file template:
 ```
-./0-copy-agent-env.sh 
+0-copy-agent-env.sh 
 writing _charts/agent.env
 ```
 
