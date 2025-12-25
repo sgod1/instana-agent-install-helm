@@ -2,6 +2,8 @@
 
 export PATH=".:$PATH"
 
+# local functions
+
 function find_agent_chart() {
    local cdir=$1
    num_tars=`find $cdir -name "instana-agent*tgz" | wc -l`
@@ -25,25 +27,71 @@ function validate_helm_action() {
    fi
 }
 
+function expand_chart() {
+   local chart=$1
+   local expand_dir=${2:-"${chart}_tmp"}
+
+   echo ""
+   echo expanding chart to $expand_dir
+   mkdir -p $expand_dir
+
+   tar xvf $chart -C $expand_dir
+   local rc=$?
+
+   if (( $rc > 0 )); then
+      echo rc=$rc, failed to expand chart $chart to $expand_dir
+      exit 1
+   fi
+}
+
+function apply_crds() {
+   local chart=$1
+
+   # expand chart
+   local expand_dir=${chart}_tmp
+   expand_chart $chart $expand_dir
+
+   # apply crds
+   echo ""
+   echo applying crds $expand_dir/instana-agent/crds
+
+   oc apply -f $expand_dir/instana-agent/crds
+   rc=$?
+
+   if (( $rc > 0 )); then
+      echo rc=$rc, failed to apply crds $expand_dir/instana-agent/crds
+      exit 1
+   fi
+}
+
+function init_agent_namespace() {
+   echo ""
+   echo initializing instana-agent project
+
+   oc new-project instana-agent
+   oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent
+   oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent
+}
+
 # main
+
+echo ... prereqs ...
+echo oc command is on the path
+echo helm command is on the path
+echo log into target openshift as cluster admin
+echo ...
+
 _chart_dir="_charts"
 
 source $_chart_dir/agent.env
 source agent-images.env
 source validate-agent-env.sh
 
-# 3-helm-agent-install.sh [chart.tgz [install|upgrade]]
-
+# 3-helm-agent-install.sh [_charts/chart.tgz [install|upgrade]]
 input_chart=$1
 helm_action=${2:-"install"}
 
 validate_helm_action $helm_action
-
-echo ... prereqs ...
-echo oc command is on the path
-echo helm command is on the path
-echo logged into target openshift as cluster admin
-echo ...
 
 validate_agent_env
 
@@ -54,24 +102,29 @@ if [[ ! -f $chart ]]; then
    exit 1
 fi
 
-echo ${helm_action}ing instana agent chart $chart
+echo ""
+echo ${helm_action}-ing instana agent chart $chart
 
-oc new-project instana-agent
-oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent
-oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent
+# init agent namespace
+init_agent_namespace
 
-# create image pull secet
+# create private registry image pull secret
+echo ""
+echo creating image pull secret $PRIVATE_REGISTRY_PULL_SECRET for private registry host $PRIVATE_REGISTRY_HOST
+
 oc create secret docker-registry $PRIVATE_REGISTRY_PULL_SECRET -n instana-agent \
     --docker-server=$PRIVATE_REGISTRY_HOST \
     --docker-username=$PRIVATE_REGISTRY_USER \
     --docker-password=$PRIVATE_REGISTRY_PASSWORD \
     --docker-email="hello@world.com"
 
-# registry host and subpath
+# concat registry host and subpath
 PRIVATE_REGISTRY=$PRIVATE_REGISTRY_HOST/$PRIVATE_REGISTRY_SUBPATH
 
+# write values yaml
 values_yaml="$_chart_dir/agent-values.yaml"
 
+echo ""
 echo writing values file $values_yaml
 
 cat <<EOF > $values_yaml
@@ -112,7 +165,11 @@ EOF
 # agent configuration for the helm chart
 agent_conf_yaml="helm-agent-config.yaml"
 
-echo ${helm_action}ing agent chart $chart with values $values_yaml, $agent_conf_yaml
+# apply crds
+apply_crds $chart
+
+echo ""
+echo ${helm_action}-ing agent chart $chart with values $values_yaml, $agent_conf_yaml
 
 set -x
 helm $helm_action -f $values_yaml -f $agent_conf_yaml instana-agent -n instana-agent $chart --wait --timeout 60m0s
