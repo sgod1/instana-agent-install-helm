@@ -18,6 +18,16 @@ function find_agent_chart() {
    echo `find . -name "instana-agent*tgz"`
 }
 
+function find_agent_conf_yaml() {
+   local conf_yaml=$1
+
+   if [[ -f _charts/$conf_yaml ]]; then
+     conf_yaml="_charts/$conf_yaml"
+   fi
+
+   echo $conf_yaml
+}
+
 function validate_helm_action() {
    local action=$1
 
@@ -145,8 +155,9 @@ controllerManager:
     - name: $PRIVATE_REGISTRY_PULL_SECRET
 EOF
 
-# agent configuration for the helm chart
-agent_conf_yaml="helm-agent-config.yaml"
+# agent configuration for the helm chart: helm-agent-config.yaml
+# place externally maintained agent configuration file into _charts/helm-agent-config.yaml
+agent_conf_yaml=$(find_agent_conf_yaml "helm-agent-config.yaml")
 
 # apply crds
 apply_crds $chart

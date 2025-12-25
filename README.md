@@ -5,6 +5,7 @@ Install skopeo, helm, oc and add to the path.<br/>
 Login into target openshift cluster as cluster admin.<br/>
 
 Use `helm-agent-config.yaml` file to configure instana agent.<br/>
+Place externally maintained agent configuration file into `_charts/helm-agent-config.yaml`.<br/>
 
 Copy agent environment file template:
 ```
