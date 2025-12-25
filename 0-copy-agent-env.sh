@@ -31,6 +31,7 @@ export PRIVATE_REGISTRY_SUBPATH="instana"
 
 export PRIVATE_REGISTRY_USER=""
 export PRIVATE_REGISTRY_PASSWORD=""
+export PRIVATE_REGISTY_EMAIL=""
 export PRIVATE_REGISTRY_PULL_SECRET="private-registry"
 
 # agent image os and arch

@@ -73,6 +73,23 @@ function init_agent_namespace() {
    oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent
 }
 
+function create_image_pull_secret() {
+   local secret=$1
+   local server=$2
+   local user=$3
+   local password=$4
+   local email=${5:-"hello@world.com"}
+
+   echo ""
+   echo creating image pull secret $secret for $server
+
+   oc create secret docker-registry $secret -n instana-agent \
+       --docker-server=$server \
+       --docker-username=$user \
+       --docker-password=$password \
+       --docker-email=$email
+}
+
 # main
 
 echo ... prereqs ...
@@ -109,14 +126,9 @@ echo ${helm_action}-ing instana agent chart $chart
 init_agent_namespace
 
 # create private registry image pull secret
-echo ""
-echo creating image pull secret $PRIVATE_REGISTRY_PULL_SECRET for private registry host $PRIVATE_REGISTRY_HOST
-
-oc create secret docker-registry $PRIVATE_REGISTRY_PULL_SECRET -n instana-agent \
-    --docker-server=$PRIVATE_REGISTRY_HOST \
-    --docker-username=$PRIVATE_REGISTRY_USER \
-    --docker-password=$PRIVATE_REGISTRY_PASSWORD \
-    --docker-email="hello@world.com"
+create_image_pull_secret \
+   ${PRIVATE_REGISTRY_PULL_SECRET} ${PRIVATE_REGISTRY_HOST} \
+   ${PRIVATE_REGISTRY_USER} ${PRIVATE_REGISTRY_PASSWORD} ${PRIVATE_REGISTRY_EMAIL}
 
 # concat registry host and subpath
 PRIVATE_REGISTRY=$PRIVATE_REGISTRY_HOST/$PRIVATE_REGISTRY_SUBPATH

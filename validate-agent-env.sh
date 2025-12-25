@@ -25,6 +25,7 @@ function validate_agent_env() {
 
    if [[ -z $PRIVATE_REGISTRY_USER ]]; then echo PRIVATE_REGISTRY_USER required; err="failed"; fi
    if [[ -z $PRIVATE_REGISTRY_PASSWORD ]]; then echo PRIVATE_REGISTRY_PASSWORD required; err="failed"; fi
+   if [[ -z $PRIVATE_REGISTRY_EMAIL ]]; then echo PRIVATE_REGISTRY_EMAIL required; err="failed"; fi
    if [[ -z $PRIVATE_REGISTRY_PULL_SECRET ]]; then echo PRIVATE_REGISTRY_PULL_SECRET required; err="failed"; fi
 
    # agent image os and arch
