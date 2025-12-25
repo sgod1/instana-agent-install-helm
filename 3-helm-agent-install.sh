@@ -77,6 +77,7 @@ _chart_dir="_charts"
 source $_chart_dir/agent.env
 source agent-images.env
 source validate-agent-env.sh
+source format-image-name.sh
 
 # 3-helm-agent-install.sh [_charts/chart.tgz [install|upgrade]]
 input_chart=$1
@@ -99,6 +100,10 @@ echo ${helm_action}-ing instana agent chart $chart
 # concat registry host and subpath
 PRIVATE_REGISTRY=$PRIVATE_REGISTRY_HOST/$PRIVATE_REGISTRY_SUBPATH
 
+os=$AGENT_OS
+arch=$AGENT_ARCH
+reg=$PRIVATE_REGISTRY
+
 # write values yaml
 values_yaml="$_chart_dir/agent-values.yaml"
 
@@ -120,7 +125,7 @@ agent:
   key: $AGENT_KEY
 
   image:
-    name: $PRIVATE_REGISTRY/$AGENT_STATIC_IMG
+    name: $(format_image_name $os $arch $reg $AGENT_STATIC_IMG)
     tag: $AGENT_TAG
 
     pullSecrets:
@@ -128,12 +133,12 @@ agent:
 
 k8s_sensor:
   image:
-    name: $PRIVATE_REGISTRY/$K8S_SENSOR_IMG
+    name: $(format_image_name $os $arch $reg $K8S_SENSOR_IMG)
     tag: $K8S_SENSOR_TAG
 
 controllerManager:
   image:
-    name: $PRIVATE_REGISTRY/$OPERATOR_IMG
+    name: $(format_image_name $os $arch $reg $OPERATOR_IMG)
     tag: $OPERATOR_TAG
 
     pullSecrets:
