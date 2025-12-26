@@ -8,6 +8,7 @@ This repo is supposed to be cloned per target cluster.<br/>
 Image names are formatted to include agent image os and architecture.<br/>
 
 Use `helm-agent-config.yaml` file to configure instana agent.<br/>
+Place external helm agent conifguration into `_charts/helm-agent-config.yaml"
 
 Copy agent environment file template:
 ```
