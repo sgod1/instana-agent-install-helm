@@ -5,7 +5,7 @@ Install skopeo, helm, oc and add to the path.<br/>
 
 You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 
-`Cluster names in configuration`
+`Cluster names in configuration`<br/>
 Scripts take optional `cluster` argument.<br/>
 
 Optional `cluster` argument is a logical key for the target cluster reference in configuration.<br/>
@@ -16,7 +16,7 @@ Configuration for the `default_cluster` is always included in the agent configur
 
 Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
 
-`Target cluster login`
+`Target cluster login`<br/>
 Log into target openshift cluster as cluster `admin`.<br/>
 
 Kubeconfig context name is set in agent configuration for each target cluster.<br/>
@@ -24,11 +24,11 @@ Kubeconfig context name is set in agent configuration for each target cluster.<b
 Run `oc config get-contexts` to see context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
 
-`Agent image names and architecture`
+`Agent image names and architecture`<br/>
 Image names are formatted to include agent image os and architecture.<br/>
 Agent image os and architecture are defined for each target cluster.<br/>
 
-`Instana helm chart agent configuration`
+`Instana helm chart agent configuration`<br/>
 Instana agent configuration is defined for each target cluster and passed to `helm` command as second value file.<br/>
 `helm-agent-config.yaml` file is used by default to configure instana agent.<br/>
 You can place external helm agent conifguration into `_charts/helm-agent-config.yaml`.<br/>
