@@ -5,7 +5,7 @@ Install skopeo, helm, oc and add to the path.<br/>
 
 You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 
-`Cluster names in configuration`<br/>
+*Cluster names in configuration*<br/>
 Scripts take optional `cluster` argument.<br/>
 
 Optional `cluster` argument is a logical key for the target cluster reference in configuration.<br/>
