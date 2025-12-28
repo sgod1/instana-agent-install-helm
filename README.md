@@ -37,7 +37,7 @@ You can place external helm agent conifguration into `_charts/helm-agent-config.
 Examples show default `default_cluster` key.<br/>
 Double undescore separates cluster key from configuration keyword.<br/>
 
-Copy agent environment file template:
+*Copy agent environment file template*:
 ```
 0-copy-agent-env.sh [cluster]
 writing _charts/agent.env
@@ -79,31 +79,31 @@ export default_cluster__AGENT_ZONE_NAME=""
 export default_cluster__AGENT_CONFIG="helm-agent-config.yaml"
 ```
 
-Initialize agent namespace
+*Initialize agent namespace*
 ```
-0-init-agent-namespace.sh
+0-init-agent-namespace.sh [cluster]
 ```
 
-Install:
+*Install*
 ```
 1-helm-agent-download.sh
-2-helm-agent-copy-images.sh
+2-helm-agent-copy-images.sh [cluster]
 
 export version="agent chart version"
-3-helm-agent-install.sh [_charts/instana-agent-${version}.tgz]
+3-helm-agent-install.sh _charts/instana-agent-${version}.tgz install [cluster]
 ```
 
-New version upgrade:
+*New version upgrade*
 ```
 1-helm-agent-download.sh
-2-helm-agent-copy-images.sh
+2-helm-agent-copy-images.sh [cluster]
 
 export version="agent chart version"
-3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
+3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade [cluster]
 ```
 
-Values only (`helm-agent-config.yaml`) update:
+*Values only (`helm-agent-config.yaml`) update*
 ```
 export version="agent chart version"
-3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade
+3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade [cluster]
 ```
