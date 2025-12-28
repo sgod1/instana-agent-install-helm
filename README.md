@@ -1,7 +1,7 @@
 # instana-agent-install-helm
 `Air gapped` instana agent helm chart intstall and upgrade
 
-Install skopeo, helm, oc and add to the path.<br/>
+Install skopeo, helm, oc, jq and add to the path.<br/>
 
 You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 
