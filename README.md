@@ -16,7 +16,7 @@ Configuration for the `default_cluster` is always included in the agent configur
 
 Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
 
-`Target cluster login`<br/>
+**Target cluster login**<br/>
 Log into target openshift cluster as cluster `admin`.<br/>
 
 Kubeconfig context name is set in agent configuration for each target cluster.<br/>
