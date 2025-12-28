@@ -69,6 +69,7 @@ source agent-images.env
 source validate-agent-env.sh
 source format-image-name.sh
 source cluster-vars.sh
+source kubeconfig-context.sh
 
 # 3-helm-agent-install.sh _charts/chart.tgz install|upgrade [cluster]
 chart=$1
@@ -80,6 +81,9 @@ validate_chart_file $chart
 validate_helm_action $helm_action
 
 validate_agent_env $cluster
+
+context=$(valvar $(formatvar KUBECONFIG_CONTEXT $cluster))
+kubeconfig_use_context $cluster $context
 
 echo ""
 echo ${helm_action}-ing instana agent chart $chart
