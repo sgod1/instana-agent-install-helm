@@ -2,6 +2,8 @@
 
 export PATH=".:$PATH"
 
+source cluster-vars.sh
+
 chart_dir="_charts"
 
 mkdir -p $chart_dir
@@ -13,6 +15,9 @@ if [[ -f $agent_env ]]; then
    echo make backup and rerun this script
    exit 1
 fi
+
+cluster=$1
+default_cluster=$(default_cluster_encode)
 
 echo writing $agent_env
 
@@ -31,20 +36,35 @@ export PRIVATE_REGISTRY_SUBPATH="instana"
 
 export PRIVATE_REGISTRY_USER=""
 export PRIVATE_REGISTRY_PASSWORD=""
-export PRIVATE_REGISTY_EMAIL=""
+export PRIVATE_REGISTRY_EMAIL=""
 export PRIVATE_REGISTRY_PULL_SECRET="private-registry"
-
-# agent image os and arch
-export AGENT_OS="linux"
-
-# ppc64le|amd64
-export AGENT_ARCH=""
-
-# required agent customization
-export AGENT_CLUSTER_NAME=""
-export AGENT_ZONE_NAME=""
 
 # skopeo creds
 export REGISTRY_AUTH_FILE=_charts/auth.json
+
+# per target cluster config
+# replicate for each cluster
+
+# default cluster config applies when no input
+# cluster name is passed on the command line
+
+export $(formatvar KUBECONFIG_CONTEXT $default_cluster)=""
+export $(formatvar AGENT_OS $default_cluster)="linux"
+export $(formatvar AGENT_ARCH $default_cluster)="" # ppc64le|amd64
+export $(formatvar AGENT_CLUSTER_NAME $default_cluster)=""
+export $(formatvar AGENT_ZONE_NAME $default_cluster)=""
+export $(formatvar AGENT_CONFIG $default_cluster)="helm-agent-config.yaml"
 EOF
 
+# this could be a loop over cluster names
+if [[ ! -z $cluster ]]; then
+cat <<EOF >> $agent_env
+
+export $(formatvar KUBECONFIG_CONTEXT $cluster)=""
+export $(formatvar AGENT_OS $cluster)="linux"
+export $(formatvar AGENT_ARCH $cluster)="" # ppc64le|amd64
+export $(formatvar AGENT_CLUSTER_NAME $cluster)=""
+export $(formatvar AGENT_ZONE_NAME $cluster)=""
+export $(formatvar AGENT_CONFIG $cluster)="helm-agent-config.yaml"
+EOF
+fi

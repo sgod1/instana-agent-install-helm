@@ -2,36 +2,25 @@
 
 export PATH=".:$PATH"
 
-# local functions
-
-function find_agent_chart() {
-   local cdir=$1
-   num_tars=`find $cdir -name "instana-agent*tgz" | wc -l`
-
-   if (( $num_tars > 1 )); then
-      echo more than one agent chart file found
-      find . -name "instana-agent*tgz"
-      echo pass agent chart file as input
-      exit 1
-   fi
-
-   echo `find . -name "instana-agent*tgz"`
-}
-
-function find_agent_config() {
-   local conf_yaml=$1
-   local charts_conf_yaml="_charts/$conf_yaml" 
-
-   if [[ -f $charts_conf_yaml ]]; then conf_yaml=$charts_conf_yaml; fi
-
-   echo $conf_yaml
-}
-
 function validate_helm_action() {
    local action=$1
 
    if [[ (! $action == install) && (! $action == upgrade) ]]; then
       echo invalid helm action $action, actions: install, upgrade
+      exit 1
+   fi
+}
+
+function validate_chart_file() {
+   local chart=$1
+
+   if [[ -z $chart ]]; then
+      echo instana agent chart name required
+      exit 1
+   fi
+
+   if [[ ! -f $chart ]]; then
+      echo instana agent chart $chart not found
       exit 1
    fi
 }
@@ -75,33 +64,22 @@ function apply_crds() {
 
 # main
 
-echo ... prereqs ...
-echo oc command is on the path
-echo helm command is on the path
-echo log into target openshift as cluster admin
-echo ...
-
-_chart_dir="_charts"
-
-source $_chart_dir/agent.env
+source _charts/agent.env
 source agent-images.env
 source validate-agent-env.sh
 source format-image-name.sh
+source cluster-vars.sh
 
-# 3-helm-agent-install.sh [_charts/chart.tgz [install|upgrade]]
-input_chart=$1
-helm_action=${2:-"install"}
+# 3-helm-agent-install.sh _charts/chart.tgz install|upgrade [cluster]
+chart=$1
+helm_action=$2
+cluster=${3:-$(default_cluster_encode)}
+
+validate_chart_file $chart
 
 validate_helm_action $helm_action
 
-validate_agent_env
-
-chart=${input_chart:-$(find_agent_chart $_chart_dir)}
-
-if [[ ! -f $chart ]]; then
-   echo instana agent chart $chart not found
-   exit 1
-fi
+validate_agent_env $cluster
 
 echo ""
 echo ${helm_action}-ing instana agent chart $chart
@@ -109,12 +87,12 @@ echo ${helm_action}-ing instana agent chart $chart
 # concat registry host and subpath
 PRIVATE_REGISTRY=$PRIVATE_REGISTRY_HOST/$PRIVATE_REGISTRY_SUBPATH
 
-os=$AGENT_OS
-arch=$AGENT_ARCH
+os=$(valvar $(formatvar AGENT_OS $cluster))
+arch=$(valvar $(formatvar AGENT_ARCH $cluster))
 reg=$PRIVATE_REGISTRY
 
 # write values yaml
-values_yaml="$_chart_dir/agent-values.yaml"
+values_yaml="_charts/agent-values-${cluster}.yaml"
 
 echo ""
 echo writing values file $values_yaml
@@ -123,10 +101,10 @@ cat <<EOF > $values_yaml
 openshift: true
 
 cluster:
-  name: $AGENT_CLUSTER_NAME
+  name: $(valvar $(formatvar AGENT_CLUSTER_NAME $cluster))
 
 zone:
-  name: $AGENT_ZONE_NAME
+  name: $(valvar $(formatvar AGENT_ZONE_NAME $cluster))
 
 agent:
   endpointHost: $AGENT_ENDPOINT_HOST
@@ -154,9 +132,13 @@ controllerManager:
     - name: $PRIVATE_REGISTRY_PULL_SECRET
 EOF
 
-# agent configuration for the helm chart: helm-agent-config.yaml
-# place external helm agent configuration file into _charts/helm-agent-config.yaml
-agent_conf_yaml=$(find_agent_config "helm-agent-config.yaml")
+# agent configuration for the helm chart
+agent_config=$(formatvar AGENT_CONFIG $cluster)
+agent_conf_yaml=$(valvar $agent_config)
+if [[ ! -f $agent_conf_yaml ]]; then
+   echo agent config file $agent_conf_yaml not found, key $agent_config
+   exit 1
+fi
 
 # apply crds
 apply_crds $chart

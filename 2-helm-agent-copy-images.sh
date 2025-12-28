@@ -29,8 +29,11 @@ source agent-images.env
 source validate-agent-env.sh
 source login-registry.sh
 source format-image-name.sh
+source cluster-vars.sh
 
-validate_agent_env
+cluster=${1:-$(default_cluster_encode)}
+
+validate_agent_env $cluster
 
 # log into instana container registry
 login_registry "_" "$DOWNLOAD_KEY" "containers.instana.io"
@@ -41,8 +44,8 @@ login_registry "$PRIVATE_REGISTRY_USER" "$PRIVATE_REGISTRY_PASSWORD" "$PRIVATE_R
 # copy images
 PRIVATE_REGISTRY=${PRIVATE_REGISTRY_HOST}/${PRIVATE_REGISTRY_SUBPATH}
 
-os=$AGENT_OS
-arch=$AGENT_ARCH
+os=$(valvar $(formatvar AGENT_OS $cluster))
+arch=$(valvar $(formatvar AGENT_ARCH $cluster))
 reg=$PRIVATE_REGISTRY
 
 src_img="containers.instana.io/instana/release/agent/static:latest"

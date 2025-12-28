@@ -2,7 +2,11 @@
 
 export PATH=".:$PATH"
 
+source cluster-vars.sh
+
 function validate_agent_env() {
+   local cluster=${1:-$(default_cluster_encode)}
+
    local agent_env="_charts/agent.env"
 
    if [[ ! -f $agent_env ]]; then
@@ -12,35 +16,64 @@ function validate_agent_env() {
 
    echo validating $agent_env
 
-   err="ok"
+   local errsum=0
 
-   if [[ -z $DOWNLOAD_KEY ]]; then echo DOWNLOAD_KEY requred; err="failed"; fi
-   if [[ -z $AGENT_KEY ]]; then echo AGENT_KEY required; err="failed"; fi
+   # agent keys
+   checkvar DOWNLOAD_KEY
+   ((errsum+=$?))
+   
+   checkvar AGENT_KEY
+   ((errsum+=$?))
 
-   if [[ -z $AGENT_ENDPOINT_HOST ]]; then echo AGENT_ENDPOINT_HOST required; err="failed"; fi
-   if [[ -z $AGENT_ENDPOINT_PORT ]]; then echo AGENT_ENDPOINT_PORT required; err="failed"; fi
+   # agent endpoint
+   checkvar AGENT_ENDPOINT_HOST
+   ((errsum+=$?))
 
-   # private container registry host
-   if [[ -z $PRIVATE_REGISTRY_HOST ]]; then echo PRIVATE_REGISTRY_HOST required; err="failed"; fi
+   checkvar AGENT_ENDPOINT_PORT
+   ((errsum+=$?))
 
-   if [[ -z $PRIVATE_REGISTRY_USER ]]; then echo PRIVATE_REGISTRY_USER required; err="failed"; fi
-   if [[ -z $PRIVATE_REGISTRY_PASSWORD ]]; then echo PRIVATE_REGISTRY_PASSWORD required; err="failed"; fi
-   if [[ -z $PRIVATE_REGISTRY_EMAIL ]]; then echo PRIVATE_REGISTRY_EMAIL required; err="failed"; fi
-   if [[ -z $PRIVATE_REGISTRY_PULL_SECRET ]]; then echo PRIVATE_REGISTRY_PULL_SECRET required; err="failed"; fi
+   # private container registry
+   checkvar PRIVATE_REGISTRY_HOST
+   ((errsum+=$?))
+
+   checkvar PRIVATE_REGISTRY_USER
+   ((errsum+=$?))
+
+   checkvar PRIVATE_REGISTRY_PASSWORD
+   ((errsum+=$?))
+
+   checkvar PRIVATE_REGISTRY_EMAIL
+   ((errsum+=$?))
+
+   checkvar PRIVATE_REGISTRY_PULL_SECRET
+   ((errsum+=$?))
+
+   # cluster specific settings
+
+   # kubeconfig context
+   checkvar $(formatvar KUBECONFIG_CONTEXT $cluster)
+   ((errsum+=$?))
 
    # agent image os and arch
-   if [[ -z $AGENT_OS ]]; then echo AGENT_OS required; err="failed"; fi
+   checkvar $(formatvar AGENT_OS $cluster)
+   ((errsum+=$?))
 
    # power pc: ppc64le
-   if [[ -z $AGENT_ARCH ]]; then echo AGENT_ARCH required; err="failed"; fi
+   checkvar $(formatvar AGENT_ARCH $cluster)
+   ((errsum+=$?))
 
    # required agent customization
-   if [[ -z $AGENT_CLUSTER_NAME ]]; then echo AGENT_CLUSTER_NAME required; err="failed"; fi
-   if [[ -z $AGENT_ZONE_NAME ]]; then echo AGENT_ZONE_NAME required; err="failed"; fi
+   checkvar $(formatvar AGENT_CLUSTER_NAME $cluster)
+   ((errsum+=$?))
 
-   if [[ $err == "failed" ]]; then
+   checkvar $(formatvar AGENT_ZONE_NAME $cluster)
+   ((errsum+=$?))
+
+   checkvar $(formatvar AGENT_CONFIG $cluster)
+   ((errsum+=$?))
+
+   if (( errsum > 0 )); then
       echo $agent_env validation failed
       exit 1
    fi
 }
-
