@@ -33,9 +33,13 @@ Instana agent configuration is defined for each target cluster and passed to `he
 `helm-agent-config.yaml` file is used by default to configure instana agent.<br/>
 You can place external helm agent conifguration into `_charts/helm-agent-config.yaml`.<br/>
 
+**Instana helm chart install|upgrade steps**<br/>
+Examples show default `default_cluster` key.<br/>
+Double undescore separates cluster key from configuration keyword.<br/>
+
 Copy agent environment file template:
 ```
-0-copy-agent-env.sh 
+0-copy-agent-env.sh [cluster]
 writing _charts/agent.env
 ```
 
@@ -58,18 +62,21 @@ export PRIVATE_REGISTRY_PASSWORD=""
 export PRIVATE_REGISTRY_EMAIL=""
 export PRIVATE_REGISTRY_PULL_SECRET="private-registry"
 
-# agent image os and arch
-export AGENT_OS="linux"
-
-# ppc64le|amd64
-export AGENT_ARCH=""
-
-# required agent customization
-export AGENT_CLUSTER_NAME=""
-export AGENT_ZONE_NAME=""
-
 # skopeo creds
 export REGISTRY_AUTH_FILE=_charts/auth.json
+
+# per target cluster config
+# replicate for each cluster
+
+# default cluster config applies when no input
+# cluster name is passed on the command line
+
+export default_cluster__KUBECONFIG_CONTEXT=""
+export default_cluster__AGENT_OS="linux"
+export default_cluster__AGENT_ARCH="" # ppc64le|amd64
+export default_cluster__AGENT_CLUSTER_NAME=""
+export default_cluster__AGENT_ZONE_NAME=""
+export default_cluster__AGENT_CONFIG="helm-agent-config.yaml"
 ```
 
 Initialize agent namespace
