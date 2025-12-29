@@ -12,14 +12,14 @@ Optional `cluster` argument is a logical key for the target cluster configuratio
 
 When ommitted, default is `default_cluster` key.<br/>
 
-Configuration for the `default_cluster` is always included in the agent configuration.<br/>
+Configuration for the `default_cluster` key is always included in agent configuration file.<br/>
 
 Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
 
 **Target cluster login**<br/>
 Log into target openshift cluster as `cluster admin`.<br/>
 
-Kubeconfig context name is set in agent configuration for each target cluster.<br/>
+Kubeconfig context name is set in agent configuration file for each target cluster.<br/>
 
 Run `oc config get-contexts` to view context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
