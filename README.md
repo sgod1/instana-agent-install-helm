@@ -8,7 +8,7 @@ You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 **Cluster names in configuration**<br/>
 Scripts take optional `cluster` argument.<br/>
 
-Optional `cluster` argument is a logical key for the target cluster reference in configuration.<br/>
+Optional `cluster` argument is a logical key for the target cluster configuration.<br/>
 
 When ommitted, default is `default_cluster` key.<br/>
 
