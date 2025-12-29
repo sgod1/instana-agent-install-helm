@@ -43,7 +43,7 @@ Double undescore delimits cluster key from configuration keyword.<br/>
 writing _charts/agent.env
 ```
 
-Update values in `_charts/agent.env`
+*Update values in* `_charts/agent.env`
 ```
 export DOWNLOAD_KEY=""
 export AGENT_KEY=""
