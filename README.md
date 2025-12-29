@@ -19,7 +19,7 @@ Per cluster configuration values are used only when cluster key is referenced by
 **Target cluster login**<br/>
 Log into target openshift cluster as `cluster admin`.<br/>
 
-Kubeconfig context name is set in agent configuration file for each target cluster.<br/>
+`Kubeconfig context name` is set in the agent configuration file for each target cluster.<br/>
 
 Run `oc config get-contexts` to view context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
