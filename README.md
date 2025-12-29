@@ -97,7 +97,7 @@ When ommitted, `default_cluster` is the default key.<br/>
 
 Configuration for the `default_cluster` key is always included in agent configuration file.<br/>
 
-Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
+Per cluster configuration values are used only when cluster key is referenced by the script `cluster` argument.<br/>
 
 **Agent image names and architecture**<br/>
 Image names are formatted to include agent image os and architecture.<br/>
