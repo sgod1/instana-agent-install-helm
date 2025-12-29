@@ -93,7 +93,7 @@ Scripts take optional `cluster` argument.<br/>
 
 Optional `cluster` argument is a logical key for the target cluster configuration.<br/>
 
-When ommitted, `default_cluster` is the default.<br/>
+When ommitted, `default_cluster` is the default key.<br/>
 
 Configuration for the `default_cluster` key is always included in agent configuration file.<br/>
 
