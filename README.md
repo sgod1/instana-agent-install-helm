@@ -1,5 +1,5 @@
 # instana-agent-install-helm
-`Air gapped` instana agent helm chart intstall and upgrade
+`Air gapped` Instana agent helm chart intstall and upgrade
 
 Install *skopeo*, *helm*, *oc*, *jq* and add to the path.<br/>
 
