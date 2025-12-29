@@ -21,7 +21,7 @@ Log into target openshift cluster as `cluster admin`.<br/>
 
 Kubeconfig context name is set in agent configuration for each target cluster.<br/>
 
-Run `oc config get-contexts` to see context names for target clusters.<br/>
+Run `oc config get-contexts` to view context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
 
 **Agent image names and architecture**<br/>
