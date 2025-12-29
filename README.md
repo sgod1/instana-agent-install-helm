@@ -13,6 +13,7 @@ Kubeconfig *context name* is set in the agent configuration file for each target
 Run `oc config get-contexts` to view context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
 
+
 **Install | Upgrade steps**<br/>
 Examples use `default_cluster` target cluster key.<br/>
 Two undescores delimit cluster key from configuration keyword.<br/>
@@ -87,6 +88,7 @@ export version="agent chart version"
 export version="agent chart version"
 3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade [cluster]
 ```
+
 
 **Cluster names in configuration**<br/>
 Scripts take optional `cluster` argument.<br/>
