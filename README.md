@@ -33,9 +33,9 @@ Instana agent configuration is defined for each target cluster and passed to `he
 `helm-agent-config.yaml` file is used by default to configure instana agent.<br/>
 You can place external helm agent conifguration into `_charts/helm-agent-config.yaml`.<br/>
 
-**Instana helm chart install|upgrade steps**<br/>
-Examples show default `default_cluster` key.<br/>
-Double undescore separates cluster key from configuration keyword.<br/>
+**install | upgrade steps**<br/>
+Examples use `default_cluster` target cluster key.<br/>
+Double undescore delimits cluster key from configuration keyword.<br/>
 
 *Copy agent environment file template*:
 ```
