@@ -5,35 +5,15 @@ Install *skopeo*, *helm*, *oc*, *jq* and add to the path.<br/>
 
 You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 
-**Cluster names in configuration**<br/>
-Scripts take optional `cluster` argument.<br/>
-
-Optional `cluster` argument is a logical key for the target cluster configuration.<br/>
-
-When ommitted, default is `default_cluster` key.<br/>
-
-Configuration for the `default_cluster` key is always included in agent configuration file.<br/>
-
-Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
-
 **Target cluster login**<br/>
 Log into target openshift cluster as `cluster admin`.<br/>
 
-`Kubeconfig context name` is set in the agent configuration file for each target cluster.<br/>
+Kubeconfig *context name* is set in the agent configuration file for each target cluster.<br/>
 
 Run `oc config get-contexts` to view context names for target clusters.<br/>
 Current kubeconfig context is marked with the star.<br/>
 
-**Agent image names and architecture**<br/>
-Image names are formatted to include agent image os and architecture.<br/>
-Agent image os and architecture are defined for each target cluster.<br/>
-
-**Instana helm chart agent configuration**<br/>
-Instana agent configuration is defined for each target cluster and passed to `helm` command as second value file.<br/>
-`helm-agent-config.yaml` file is used by default to configure instana agent.<br/>
-You can place external helm agent conifguration into `_charts/helm-agent-config.yaml`.<br/>
-
-**install | upgrade steps**<br/>
+**Install | Upgrade steps**<br/>
 Examples use `default_cluster` target cluster key.<br/>
 Two undescores delimit cluster key from configuration keyword.<br/>
 
@@ -107,3 +87,23 @@ export version="agent chart version"
 export version="agent chart version"
 3-helm-agent-install.sh _charts/instana-agent-${version}.tgz upgrade [cluster]
 ```
+
+**Cluster names in configuration**<br/>
+Scripts take optional `cluster` argument.<br/>
+
+Optional `cluster` argument is a logical key for the target cluster configuration.<br/>
+
+When ommitted, default is `default_cluster` key.<br/>
+
+Configuration for the `default_cluster` key is always included in agent configuration file.<br/>
+
+Per cluster configuration values are used only when cluster key is referenced by the scrit `cluster` argument.<br/>
+
+**Agent image names and architecture**<br/>
+Image names are formatted to include agent image os and architecture.<br/>
+Agent image os and architecture are defined for each target cluster.<br/>
+
+**Instana helm chart agent configuration**<br/>
+Instana agent configuration is defined for each target cluster and passed to `helm` command as second value file.<br/>
+`helm-agent-config.yaml` file is used by default to configure instana agent.<br/>
+You can place external helm agent conifguration into `_charts/helm-agent-config.yaml`.<br/>
