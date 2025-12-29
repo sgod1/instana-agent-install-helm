@@ -12,13 +12,7 @@ function copy_image() {
 
    echo copying image $src to $dst
 
-   skopeo copy docker://$src docker://$dst $platform
-   rc=$?
-
-   if (( $rc > 0 )); then
-      echo rc=$rc, failed to copy $src image to $dst image
-      exit 1
-   fi
+   skopeo copy docker://$src docker://$dst $platform || exit 1
 }
 
 # main

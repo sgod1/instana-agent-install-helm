@@ -11,8 +11,8 @@ mkdir -p $chart_dir
 agent_env=$chart_dir/agent.env
 
 if [[ -f $agent_env ]]; then
-   echo agent env file $agent_env already exits
-   echo make backup and rerun this script
+   echo agent env file $agent_env already exits >&2
+   echo make backup and rerun this script >&2
    exit 1
 fi
 

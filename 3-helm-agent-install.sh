@@ -6,7 +6,7 @@ function validate_helm_action() {
    local action=$1
 
    if [[ (! $action == install) && (! $action == upgrade) ]]; then
-      echo invalid helm action $action, actions: install, upgrade
+      echo invalid helm action $action, actions: install, upgrade >&2
       exit 1
    fi
 }
@@ -15,12 +15,12 @@ function validate_chart_file() {
    local chart=$1
 
    if [[ -z $chart ]]; then
-      echo instana agent chart name required
+      echo instana agent chart name required >&2
       exit 1
    fi
 
    if [[ ! -f $chart ]]; then
-      echo instana agent chart $chart not found
+      echo instana agent chart $chart not found >&2
       exit 1
    fi
 }
@@ -37,7 +37,7 @@ function expand_chart() {
    local rc=$?
 
    if (( $rc > 0 )); then
-      echo rc=$rc, failed to expand chart $chart to $expand_dir
+      echo rc=$rc, failed to expand chart $chart to $expand_dir >&2
       exit 1
    fi
 }
@@ -57,7 +57,7 @@ function apply_crds() {
    rc=$?
 
    if (( $rc > 0 )); then
-      echo rc=$rc, failed to apply crds $expand_dir/instana-agent/crds
+      echo rc=$rc, failed to apply crds $expand_dir/instana-agent/crds >&2
       exit 1
    fi
 }
@@ -81,6 +81,15 @@ validate_chart_file $chart
 validate_helm_action $helm_action
 
 validate_agent_env $cluster
+
+function get_agent_config_file() {
+   local cluster=$1
+   local file=$(valvarf AGENT_CONFIG $cluster)
+   if [[ ! -f $file ]]; then echo agent config file $file not found, cluster key $cluster >&2; exit 1; fi
+   echo $file
+}
+
+agent_conf_yaml=$(get_agent_config_file $cluster) || exit 1;
 
 context=$(valvar $(formatvar KUBECONFIG_CONTEXT $cluster))
 kubeconfig_use_context $cluster $context
@@ -135,14 +144,6 @@ controllerManager:
     pullSecrets:
     - name: $PRIVATE_REGISTRY_PULL_SECRET
 EOF
-
-# agent configuration for the helm chart
-agent_config=$(formatvar AGENT_CONFIG $cluster)
-agent_conf_yaml=$(valvar $agent_config)
-if [[ ! -f $agent_conf_yaml ]]; then
-   echo agent config file $agent_conf_yaml not found, key $agent_config
-   exit 1
-fi
 
 # apply crds
 apply_crds $chart

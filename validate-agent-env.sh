@@ -10,7 +10,7 @@ function validate_agent_env() {
    local agent_env="_charts/agent.env"
 
    if [[ ! -f $agent_env ]]; then
-      echo agent env file $agent_env not found
+      echo agent env file $agent_env not found >&2
       exit 1
    fi
 

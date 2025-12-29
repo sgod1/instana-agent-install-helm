@@ -5,7 +5,7 @@ function init_agent_namespace() {
    local rc=0
 
    echo ""
-   echo initializing instana-agent namespace
+   echo initializing namespace instana-agent
 
    oc get project instana-agent 2>/dev/null; rc=$?
    if (( rc==0 )); then
@@ -13,15 +13,11 @@ function init_agent_namespace() {
 
    else
       echo creating instana-agent namespace
-      oc new-project instana-agent; rc=$?
-      if (( rc > 0 )); then echo rc=$rc, failed to create instana-agent namespace; exit 1; fi
+      oc new-project instana-agent || exit 1
    fi
 
-   oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent; rc=$?
-   if (( rc > 0 )); then echo rc=$rc, add-scc-to-user privileged failed, sa instana-agent, namespace instana-agent; exit 1; fi
-
-   oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent; rc=$?
-   if (( rc > 0 )); then echo rc=$rc, add-scc-to-user anyuid failed, sa instana-agent, namespace instana-agent; exit 1; fi
+   oc adm policy add-scc-to-user privileged -z instana-agent -n instana-agent || exit 1
+   oc adm policy add-scc-to-user anyuid -z instana-agent-remote -n instana-agent || exit 1
 }
 
 function create_image_pull_secret() {
@@ -43,9 +39,7 @@ function create_image_pull_secret() {
          --docker-server=$server \
          --docker-username=$user \
          --docker-password=$password \
-         --docker-email=$email; rc=$?
-
-      if (( rc > 0 )); then echo rc=$rc, failed to create image pull secret $secret; exit 1; fi
+         --docker-email=$email || exit 1
    fi
 }
 

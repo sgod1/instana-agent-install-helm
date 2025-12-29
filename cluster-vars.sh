@@ -13,6 +13,13 @@ function valvar() {
    echo ${!var}
 }
 
+function valvarf() {
+   local var=$1
+   local cluster=$2
+   local fvar=$(formatvar $var $cluster)
+   echo $(valvar $fvar)
+}
+
 function checkvar() {
    local var=$1
    local val=${!var}

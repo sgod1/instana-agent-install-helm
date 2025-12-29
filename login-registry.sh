@@ -10,7 +10,7 @@ function login_registry() {
    skopeo login --tls-verify=false -u $user -p $password $registry
    rc=$?
    if (( $rc > 0 )); then
-      echo rc=$rc, failed to log into container registry $registry
+      echo rc=$rc, failed to log into container registry $registry >&2
       exit 1
    fi
 }
