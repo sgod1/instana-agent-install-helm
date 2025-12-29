@@ -35,7 +35,7 @@ You can place external helm agent conifguration into `_charts/helm-agent-config.
 
 **install | upgrade steps**<br/>
 Examples use `default_cluster` target cluster key.<br/>
-Two undescores delimits cluster key from configuration keyword.<br/>
+Two undescores delimit cluster key from configuration keyword.<br/>
 
 *Copy agent environment file template*:
 ```
