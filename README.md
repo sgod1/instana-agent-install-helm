@@ -2,6 +2,12 @@
 `Air gapped` Instana agent helm chart intstall and upgrade
 
 Install *skopeo*, *helm*, *oc*, *jq* and add to the path.<br/>
+```
+skopeo: sudo dnf install skopeo
+jq: sudo dnf install jq
+oc: https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux-amd64-rhel9.tar.gz
+helm: https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-linux-amd64.tar.gz
+```
 
 You can clone this repo per agent cluster, or configure multiple clusters.<br/>
 
