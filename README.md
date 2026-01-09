@@ -5,7 +5,6 @@ Install *skopeo*, *helm*, *oc*, *jq* and add to the path.<br/>
 ```
 skopeo: sudo dnf install skopeo
 jq: sudo dnf install jq
-skopeo: sudo dnf install skopeo (or container-tools)
 oc: https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux-amd64-rhel9.tar.gz
 helm: https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-linux-amd64.tar.gz
 ```
